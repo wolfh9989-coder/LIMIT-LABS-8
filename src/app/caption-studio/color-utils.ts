@@ -1,0 +1,31 @@
+export const PRESET_COLORS = [
+  "#ffffff",
+  "#22d3ee",
+  "#38bdf8",
+  "#818cf8",
+  "#c084fc",
+  "#f472b6",
+  "#fb7185",
+  "#f59e0b",
+  "#facc15",
+  "#4ade80",
+  "#2dd4bf",
+  "#e2e8f0",
+  "#f8fafc",
+  "#67e8f9",
+  "#a78bfa",
+  "#f0abfc",
+  "#ef4444",
+  "#14b8a6",
+  "#84cc16",
+  "#f97316",
+] as const;
+
+export const THEME_PALETTES = {
+  neonCyan: ["#08111f", "#22d3ee", "#67e8f9", "#ffffff"],
+  electricViolet: ["#10051d", "#a855f7", "#d946ef", "#ffffff"],
+  retroSunset: ["#20110a", "#f97316", "#fb7185", "#fde68a"],
+  comicPop: ["#0f172a", "#facc15", "#ef4444", "#ffffff"],
+  gamerRgb: ["#050816", "#22d3ee", "#a855f7", "#84cc16"],
+  luxuryGold: ["#0b0b0f", "#facc15", "#fde68a", "#ffffff"],
+};
