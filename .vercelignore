@@ -1,0 +1,11 @@
+.next
+node_modules
+coverage
+test-results
+playwright-report
+public/uploads
+public/renders
+.limitlabs
+.env
+.env.*
+*.log

@@ -34,6 +34,8 @@ export async function middleware(request: NextRequest) {
   const betaUnlocked = await hasValidBetaAccess(request.cookies.get(BETA_ACCESS_COOKIE)?.value ?? null);
 
   if (isBetaGateEnabled()) {
+    const betaNextPath = pathname === "/" && isAuthGateEnabled() ? "/auth-access" : requestedPath;
+
     if (pathname === "/beta-access") {
       if (!betaUnlocked) {
         return NextResponse.next();
@@ -43,9 +45,15 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(nextPath, request.url));
     }
 
+    if (pathname === "/auth-access" && !betaUnlocked) {
+      const gateUrl = new URL("/beta-access", request.url);
+      gateUrl.searchParams.set("next", "/auth-access");
+      return NextResponse.redirect(gateUrl);
+    }
+
     if (!isPublicPath(pathname) && !betaUnlocked) {
       const gateUrl = new URL("/beta-access", request.url);
-      gateUrl.searchParams.set("next", sanitizeBetaRedirectPath(requestedPath));
+      gateUrl.searchParams.set("next", sanitizeBetaRedirectPath(betaNextPath));
       return NextResponse.redirect(gateUrl);
     }
   }

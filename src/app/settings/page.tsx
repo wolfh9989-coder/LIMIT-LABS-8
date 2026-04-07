@@ -183,7 +183,10 @@ export default function SettingsPage() {
       if (typeof window !== "undefined") {
         window.localStorage.removeItem(userStorageKey);
       }
-      await fetch("/api/auth-gate/session", { method: "DELETE" });
+      await Promise.all([
+        fetch("/api/auth-gate/session", { method: "DELETE" }),
+        fetch("/api/beta-access", { method: "DELETE" }),
+      ]);
     } catch {
       // Continue redirect even if cookie cleanup fails.
     } finally {
