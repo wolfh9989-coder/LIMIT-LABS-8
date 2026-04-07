@@ -59,8 +59,12 @@ function persist() {
     billingProfilesByUser: Object.fromEntries(billingProfilesByUser.entries()),
   };
 
-  mkdirSync(dirname(storePath), { recursive: true });
-  writeFileSync(storePath, JSON.stringify(snapshot, null, 2));
+  try {
+    mkdirSync(dirname(storePath), { recursive: true });
+    writeFileSync(storePath, JSON.stringify(snapshot, null, 2));
+  } catch {
+    // Filesystem may be read-only (e.g., Vercel serverless). In-memory store is still used for the current invocation.
+  }
 }
 
 function hydrateMap<T>(target: Map<string, T>, source?: Record<string, T>) {

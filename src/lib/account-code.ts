@@ -20,6 +20,17 @@ function generateCandidateCode() {
   return `LAB22-${mid}-${tail}`;
 }
 
+// Produces the same LAB code for the same userId every time — no persistence required.
+function generateDeterministicCode(userId: string) {
+  let h = 5381;
+  for (let i = 0; i < userId.length; i++) {
+    h = (Math.imul(33, h) ^ userId.charCodeAt(i)) >>> 0;
+  }
+  const mid = String(h % 10000).padStart(4, "0");
+  const tail = String((h >>> 16) % 1000).padStart(3, "0");
+  return `LAB22-${mid}-${tail}`;
+}
+
 async function generateUniqueSupabaseCode() {
   const supabase = getSupabaseAdmin();
   if (!supabase) {
@@ -106,7 +117,7 @@ export async function getOrCreateAccountCode({ userId, email }: { userId: string
     };
   }
 
-  const accountCode = owner ? OWNER_ACCOUNT_CODE : generateCandidateCode();
+  const accountCode = owner ? OWNER_ACCOUNT_CODE : generateDeterministicCode(userId);
   setMemorySubscription(userId, {
     ...current,
     trackingCode: accountCode,
