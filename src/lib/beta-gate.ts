@@ -1,5 +1,7 @@
 export const BETA_ACCESS_COOKIE = "ll8_beta_access";
-const DEFAULT_BETA_REDIRECT = "/splash";
+function getDefaultBetaRedirect() {
+  return process.env.PRE_SPLASH_AUTH_GATE === "false" ? "/splash" : "/auth-access";
+}
 
 export function getBetaAccessCode() {
   return process.env.BETA_ACCESS_CODE?.trim() ?? "";
@@ -11,7 +13,7 @@ export function isBetaGateEnabled() {
 
 export function sanitizeBetaRedirectPath(path: string | null | undefined) {
   if (!path || !path.startsWith("/") || path.startsWith("//") || path === "/beta-access") {
-    return DEFAULT_BETA_REDIRECT;
+    return getDefaultBetaRedirect();
   }
 
   return path;

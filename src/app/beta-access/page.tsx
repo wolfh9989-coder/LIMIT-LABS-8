@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { BetaAccessForm } from "@/components/BetaAccessForm";
+import { sanitizeBetaRedirectPath } from "@/lib/beta-gate";
 
 const particles = Array.from({ length: 26 }, (_, index) => ({
   id: index,
@@ -18,21 +19,13 @@ const rails = [
   { right: "10%", bottom: "12%", width: "30%", rotate: "-14deg" },
 ];
 
-function normalizeNextTarget(path: string | null) {
-  if (!path || !path.startsWith("/") || path.startsWith("//") || path === "/beta-access") {
-    return "/splash";
-  }
-
-  return path;
-}
-
 export default async function BetaAccessPage({
   searchParams,
 }: {
   searchParams: Promise<{ next?: string }>;
 }) {
   const params = await searchParams;
-  const nextTarget = normalizeNextTarget(params.next ?? null);
+  const nextTarget = sanitizeBetaRedirectPath(params.next ?? null);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
