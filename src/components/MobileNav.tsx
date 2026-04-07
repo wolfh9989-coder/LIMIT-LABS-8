@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Clapperboard, Cpu, Library, Sparkles, Zap, type LucideIcon } from "lucide-react";
+import { Clapperboard, Cpu, Library, Settings, Sparkles, Zap, type LucideIcon } from "lucide-react";
 import { deriveSubscriptionLifecycle } from "@/lib/subscription-lifecycle";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import type { Entitlement } from "@/lib/types";
@@ -34,6 +34,7 @@ const items: NavItem[] = [
   { label: "Projects", href: "/projects", icon: Library },
   { label: "Studio", href: "/studio", icon: Clapperboard },
   { label: "Pro", href: "/pro", icon: Zap },
+  { label: "Settings", href: "/settings", icon: Settings },
 ];
 
 const proNavDisabled = true;
@@ -115,7 +116,7 @@ export function MobileNav() {
             className="inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-white/40"
           >
             <span className="h-2 w-2 rounded-full bg-white/25" />
-            <span>Pro Disabled</span>
+            <span>Pro Locked</span>
           </div>
         ) : (
           <Link
@@ -131,7 +132,7 @@ export function MobileNav() {
           </Link>
         )}
       </div>
-      <div className="grid grid-cols-5 gap-2 text-center text-[11px]">
+      <div className="grid grid-cols-6 gap-2 text-center text-[11px]">
         {items.map((item) => {
           const Icon = item.icon;
           const isDisabled = proNavDisabled && item.label === "Pro";
