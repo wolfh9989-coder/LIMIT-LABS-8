@@ -8,6 +8,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 
 const userStorageKey = "limitlabs8.user_id";
 const rememberedEmailKey = "limitlabs8.remembered_email";
+const accountCodeStorageKey = "limitlabs8.account_code";
 
 type AuthUser = {
   id: string;
@@ -36,8 +37,12 @@ export default function SettingsPage() {
 
     const fallbackId = window.localStorage.getItem(userStorageKey) ?? "";
     const fallbackEmail = window.localStorage.getItem(rememberedEmailKey) ?? "";
+    const cachedAccountCode = window.localStorage.getItem(accountCodeStorageKey) ?? "";
     if (fallbackId || fallbackEmail) {
       setFallbackUser({ id: fallbackId || "local-account", email: fallbackEmail || null });
+    }
+    if (cachedAccountCode.startsWith("LAB")) {
+      setAccountCode(cachedAccountCode);
     }
   }, []);
 
@@ -85,7 +90,12 @@ export default function SettingsPage() {
       if (!active) {
         return;
       }
-      setAccountCode(code);
+      if (code && code.startsWith("LAB")) {
+        setAccountCode(code);
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(accountCodeStorageKey, code);
+        }
+      }
     });
 
     return () => {

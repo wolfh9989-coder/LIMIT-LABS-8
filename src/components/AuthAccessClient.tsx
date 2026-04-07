@@ -8,6 +8,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 const userStorageKey = "limitlabs8.user_id";
 const rememberedEmailKey = "limitlabs8.remembered_email";
 const localAccountsKey = "limitlabs8.local_auth_accounts";
+const accountCodeStorageKey = "limitlabs8.account_code";
 
 type AuthAccessClientProps = {
   nextTarget: string;
@@ -159,6 +160,9 @@ export function AuthAccessClient({ nextTarget }: AuthAccessClientProps) {
       await createSession(userId);
       const code = await fetchAccountCode(userId, accessToken);
       setAccountCode(code);
+      if (code && code.startsWith("LAB")) {
+        window.localStorage.setItem(accountCodeStorageKey, code);
+      }
 
       window.setTimeout(() => {
         router.replace(nextTarget);
