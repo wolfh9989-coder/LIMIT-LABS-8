@@ -65,11 +65,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid asset kind" }, { status: 400 });
   }
 
-  const stored = await saveUploadedMediaAsset({
-    file,
-    userId: identity.userId,
-    kind,
-  });
+  let stored: Awaited<ReturnType<typeof saveUploadedMediaAsset>>;
+  try {
+    stored = await saveUploadedMediaAsset({
+      file,
+      userId: identity.userId,
+      kind,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to store media upload.";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 
   const asset: MediaAsset = {
     id: randomUUID(),
@@ -100,6 +106,7 @@ export async function POST(request: Request) {
   });
 
   if (error) {
+    await removeUploadedMediaAsset(stored.storagePath);
     return NextResponse.json({ error: "Failed to save media asset metadata" }, { status: 500 });
   }
 

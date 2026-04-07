@@ -425,8 +425,8 @@ export default function StudioMagicPage() {
       if (kind === "logo") setSelectedLogoAssetId(payload.asset.id);
       if (kind === "audio") setSelectedAudioAssetId(payload.asset.id);
       if (kind === "video") setSelectedVideoAssetId(payload.asset.id);
-    } catch {
-      setError("Media upload failed.");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Media upload failed.");
     } finally {
       setIsUploadingAsset(false);
     }
