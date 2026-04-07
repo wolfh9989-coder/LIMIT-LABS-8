@@ -36,6 +36,8 @@ const items: NavItem[] = [
   { label: "Pro", href: "/pro", icon: Zap },
 ];
 
+const proNavDisabled = true;
+
 const defaultEntitlement: Entitlement = {
   userId: "",
   plan: "free",
@@ -107,22 +109,46 @@ export function MobileNav() {
         <span className="ll8-footer-neon__orb ll8-footer-neon__orb--d" />
       </div>
       <div className="mb-2 flex justify-center">
-        <Link
-          href="/pro"
-          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] uppercase tracking-[0.22em] ${navStatus.className}`}
-        >
-          <span className={`h-2 w-2 rounded-full ${navStatus.dotClass}`} />
-          <span
-            className={navStatus.neonLabel ? "bg-[linear-gradient(90deg,#22d3ee,#8b5cf6,#d946ef)] bg-clip-text font-semibold text-transparent [text-shadow:0_0_10px_rgba(34,211,238,0.22)]" : undefined}
+        {proNavDisabled ? (
+          <div
+            aria-disabled="true"
+            className="inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-white/40"
           >
-            {navStatus.label}
-          </span>
-        </Link>
+            <span className="h-2 w-2 rounded-full bg-white/25" />
+            <span>Pro Disabled</span>
+          </div>
+        ) : (
+          <Link
+            href="/pro"
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] uppercase tracking-[0.22em] ${navStatus.className}`}
+          >
+            <span className={`h-2 w-2 rounded-full ${navStatus.dotClass}`} />
+            <span
+              className={navStatus.neonLabel ? "bg-[linear-gradient(90deg,#22d3ee,#8b5cf6,#d946ef)] bg-clip-text font-semibold text-transparent [text-shadow:0_0_10px_rgba(34,211,238,0.22)]" : undefined}
+            >
+              {navStatus.label}
+            </span>
+          </Link>
+        )}
       </div>
       <div className="grid grid-cols-5 gap-2 text-center text-[11px]">
         {items.map((item) => {
           const Icon = item.icon;
+          const isDisabled = proNavDisabled && item.label === "Pro";
           const active = pathname === item.href;
+          if (isDisabled) {
+            return (
+              <div
+                key={item.href}
+                aria-disabled="true"
+                className="cursor-not-allowed rounded-[18px] bg-white/5 px-2 py-2 text-white/28"
+              >
+                <Icon className="mx-auto h-4 w-4" />
+                <div className="mt-1">{item.label}</div>
+              </div>
+            );
+          }
+
           return (
             <Link
               key={item.href}
